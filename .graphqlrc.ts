@@ -45,6 +45,7 @@ const config: CodegenConfig = {
 					Upload: "unknown",
 					WeightScalar: "unknown",
 					_Any: "unknown",
+					PositiveInt: "number",
 				},
 			},
 			presetConfig: {
