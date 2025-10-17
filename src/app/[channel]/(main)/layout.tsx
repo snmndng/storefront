@@ -3,8 +3,8 @@ import { Footer } from "@/ui/components/Footer";
 import { Header } from "@/ui/components/Header";
 
 export const metadata = {
-	title: "Saleor Storefront example",
-	description: "Starter pack for building performant e-commerce experiences with Saleor.",
+	title: "Your Brand - Premium E-commerce Store",
+	description: "Discover premium products with exceptional quality and service.",
 };
 
 export default async function RootLayout(props: {
