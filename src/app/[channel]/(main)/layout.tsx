@@ -1,6 +1,7 @@
 import { type ReactNode } from "react";
 import { Footer } from "@/ui/components/Footer";
 import { Header } from "@/ui/components/Header";
+import { ThemeCustomizer } from "@/ui/components/ThemeCustomizer";
 
 export const metadata = {
 	title: "Your Brand - Premium E-commerce Store",
@@ -20,6 +21,7 @@ export default async function RootLayout(props: {
 				<main className="flex-1">{props.children}</main>
 				<Footer channel={channel} />
 			</div>
+			<ThemeCustomizer />
 		</>
 	);
 }
