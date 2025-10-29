@@ -4,9 +4,9 @@ import { executeGraphQL } from "@/lib/graphql";
 import { ProductList } from "@/ui/components/ProductList";
 
 export const metadata = {
-	title: "Your Brand - Featured Products",
+	title: "Luxiorstore - Luxury Redefined",
 	description:
-		"Explore our curated collection of premium products, carefully selected for quality and style.",
+		"Discover premium luxury products with exceptional quality and unmatched service at Luxiorstore.",
 };
 
 export default async function Page(props: { params: Promise<{ channel: string }> }) {
@@ -23,7 +23,7 @@ export default async function Page(props: { params: Promise<{ channel: string }>
 		return (
 			<div className="flex min-h-screen items-center justify-center">
 				<div className="text-center">
-					<h1 className="mb-4 text-2xl font-bold text-gray-900">Welcome to Your Brand</h1>
+					<h1 className="mb-4 text-2xl font-bold text-gray-900">Welcome to Luxiorstore</h1>
 					<p className="mb-8 text-gray-600">
 						No featured products found. Please check your Saleor backend configuration.
 					</p>
@@ -44,26 +44,90 @@ export default async function Page(props: { params: Promise<{ channel: string }>
 	return (
 		<>
 			{/* Hero Section */}
-			<section className="relative bg-gradient-to-br from-gray-50 to-white py-16 sm:py-24">
-				<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+			<section className="relative bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 py-20 sm:py-32">
+				{/* Background Pattern */}
+				<div
+					className="absolute inset-0 opacity-40"
+					style={{
+						backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f59e0b' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+					}}
+				></div>
+
+				<div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 					<div className="text-center">
-						<h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-							Discover Premium
-							<span className="block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-								Quality Products
+						<div className="mb-8">
+							<div className="inline-flex items-center space-x-2 rounded-full bg-gradient-to-r from-amber-100 to-orange-100 px-4 py-2 text-sm font-medium text-amber-800">
+								<span className="h-2 w-2 rounded-full bg-amber-500"></span>
+								<span>New Collection Available</span>
+							</div>
+						</div>
+
+						<h1 className="text-5xl font-bold tracking-tight text-gray-900 sm:text-7xl">
+							<span className="block">Luxury</span>
+							<span className="block bg-gradient-to-r from-amber-600 via-orange-600 to-red-600 bg-clip-text text-transparent">
+								Redefined
 							</span>
 						</h1>
-						<p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-gray-600">
-							Explore our carefully curated collection of premium products, designed for those who appreciate
-							quality and style.
+
+						<p className="mx-auto mt-8 max-w-3xl text-xl leading-8 text-gray-600">
+							Discover premium luxury products with exceptional quality and unmatched service. Every piece in
+							our collection is carefully curated for the discerning individual.
 						</p>
-						<div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
-							<a href="#featured-products" className="btn-primary inline-flex items-center justify-center">
-								Shop Now
+
+						<div className="mt-12 flex flex-col justify-center gap-4 sm:flex-row">
+							<a
+								href="#featured-products"
+								className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:from-amber-700 hover:to-orange-700 hover:shadow-xl"
+							>
+								Explore Collection
 							</a>
-							<Link href="/demo" className="btn-secondary inline-flex items-center justify-center">
-								View Customization Demo
+							<Link
+								href="/demo"
+								className="inline-flex items-center justify-center rounded-xl border-2 border-amber-600 px-8 py-4 text-lg font-semibold text-amber-600 transition-all duration-300 hover:-translate-y-0.5 hover:bg-amber-600 hover:text-white"
+							>
+								View Features
 							</Link>
+						</div>
+
+						{/* Trust Indicators */}
+						<div className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-3">
+							<div className="flex flex-col items-center">
+								<div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white">
+									<svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+									</svg>
+								</div>
+								<h3 className="mt-4 text-lg font-semibold text-gray-900">Premium Quality</h3>
+								<p className="mt-2 text-sm text-gray-600">Handpicked luxury items</p>
+							</div>
+							<div className="flex flex-col items-center">
+								<div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white">
+									<svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											strokeWidth={2}
+											d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+										/>
+									</svg>
+								</div>
+								<h3 className="mt-4 text-lg font-semibold text-gray-900">Fast Delivery</h3>
+								<p className="mt-2 text-sm text-gray-600">Free shipping over $100</p>
+							</div>
+							<div className="flex flex-col items-center">
+								<div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white">
+									<svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											strokeWidth={2}
+											d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+										/>
+									</svg>
+								</div>
+								<h3 className="mt-4 text-lg font-semibold text-gray-900">Secure Shopping</h3>
+								<p className="mt-2 text-sm text-gray-600">SSL encrypted checkout</p>
+							</div>
 						</div>
 					</div>
 				</div>

@@ -2,10 +2,13 @@ import { type ReactNode } from "react";
 import { Footer } from "@/ui/components/Footer";
 import { Header } from "@/ui/components/Header";
 import { ThemeCustomizer } from "@/ui/components/ThemeCustomizer";
+import { ErrorBoundary } from "@/ui/components/ErrorBoundary";
+import { ToastProvider } from "@/ui/components/Toast";
 
 export const metadata = {
-	title: "Your Brand - Premium E-commerce Store",
-	description: "Discover premium products with exceptional quality and service.",
+	title: "Luxiorstore - Luxury Redefined",
+	description:
+		"Discover premium luxury products with exceptional quality and unmatched service at Luxiorstore.",
 };
 
 export default async function RootLayout(props: {
@@ -15,13 +18,15 @@ export default async function RootLayout(props: {
 	const channel = (await props.params).channel;
 
 	return (
-		<>
-			<Header channel={channel} />
-			<div className="flex min-h-[calc(100dvh-64px)] flex-col">
-				<main className="flex-1">{props.children}</main>
-				<Footer channel={channel} />
-			</div>
-			<ThemeCustomizer />
-		</>
+		<ErrorBoundary>
+			<ToastProvider>
+				<div className="flex min-h-screen flex-col">
+					<Header channel={channel} />
+					<main className="flex-1">{props.children}</main>
+					<Footer channel={channel} />
+					<ThemeCustomizer />
+				</div>
+			</ToastProvider>
+		</ErrorBoundary>
 	);
 }

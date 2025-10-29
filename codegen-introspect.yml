@@ -1,0 +1,5 @@
+schema: https://api.luxiormall.com/graphql/
+generates:
+  src/gql/schema.json:
+    plugins:
+      - introspection

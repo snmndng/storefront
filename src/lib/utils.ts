@@ -36,9 +36,14 @@ export function formatMoneyRange({
 	return price ? formatMoney(price.amount, price.currency) : "Price not available";
 }
 
-// Get href for variant (placeholder function)
-export function getHrefForVariant(productSlug: string, variantId: string): string {
-	return `/products/${productSlug}?variant=${variantId}`;
+// Get href for variant
+export function getHrefForVariant(
+	params: { productSlug: string; variantId: string },
+	channel?: string,
+): string {
+	// If no channel provided, return relative path (LinkWithChannel will handle the channel)
+	const baseUrl = channel ? `/${channel}/products/${params.productSlug}` : `/products/${params.productSlug}`;
+	return `${baseUrl}?variant=${params.variantId}`;
 }
 
 // Format date

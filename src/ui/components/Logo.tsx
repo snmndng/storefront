@@ -2,21 +2,24 @@
 
 import { usePathname } from "next/navigation";
 import { LinkWithChannel } from "../atoms/LinkWithChannel";
-
-const companyName = "Your Brand"; // TODO: Replace with your actual brand name
+import { brandConfig } from "@/config/branding";
 
 export const Logo = () => {
 	const pathname = usePathname();
+	const { company } = brandConfig;
 
 	const logoContent = (
-		<div className="flex items-center space-x-2">
-			{/* You can replace this with your logo image */}
-			<div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-				<span className="text-white font-bold text-sm">{companyName.charAt(0)}</span>
+		<div className="flex items-center space-x-3">
+			{/* Luxiorstore Logo Icon */}
+			<div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 shadow-lg">
+				<span className="text-lg font-bold tracking-wider text-white">L</span>
 			</div>
-			<span className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-				{companyName}
-			</span>
+			<div className="flex flex-col">
+				<span className="bg-gradient-to-r from-amber-600 via-orange-600 to-red-600 bg-clip-text text-2xl font-bold tracking-tight text-transparent">
+					{company.name}
+				</span>
+				<span className="-mt-1 text-xs font-medium tracking-wide text-gray-500">{company.tagline}</span>
+			</div>
 		</div>
 	);
 

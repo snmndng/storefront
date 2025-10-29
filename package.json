@@ -23,6 +23,7 @@
 		"@stripe/react-stripe-js": "2.6.2",
 		"@stripe/stripe-js": "2.2.0",
 		"@tailwindcss/container-queries": "0.1.1",
+		"@vercel/analytics": "1.5.0",
 		"clsx": "2.1.0",
 		"dotenv": "17.2.3",
 		"editorjs-html": "3.4.3",
@@ -50,6 +51,7 @@
 	"devDependencies": {
 		"@graphql-codegen/cli": "5.0.0",
 		"@graphql-codegen/client-preset": "4.1.0",
+		"@graphql-codegen/introspection": "5.0.0",
 		"@graphql-typed-document-node/core": "3.2.0",
 		"@next/env": "^15.0.0",
 		"@parcel/watcher": "2.3.0",

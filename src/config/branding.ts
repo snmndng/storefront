@@ -4,19 +4,26 @@
 export const brandConfig = {
 	// Company Information
 	company: {
-		name: "LuxiorMall",
-		tagline: "Premium Shopping Experience",
-		description: "Discover premium products with exceptional quality and service",
+		name: "Luxiorstore",
+		tagline: "Luxury Redefined",
+		description: "Discover premium luxury products with exceptional quality and unmatched service",
 		founded: "2024",
-		email: "hello@luxiormall.com",
+		email: "hello@luxiorstore.com",
 		phone: "+1 (555) 123-4567",
+		address: {
+			street: "123 Luxury Avenue",
+			city: "New York",
+			state: "NY",
+			zip: "10001",
+			country: "United States",
+		},
 	},
 
 	// Visual Branding
 	branding: {
 		// Logo Configuration
 		logo: {
-			text: "LuxiorMall",
+			text: "Luxiorstore",
 			showIcon: true,
 			iconType: "shopping-bag", // shopping-bag, store, crown, diamond
 			size: "lg", // sm, md, lg, xl
@@ -188,20 +195,21 @@ export const brandConfig = {
 
 	// Social Media Links
 	social: {
-		facebook: "https://facebook.com/luxiormall",
-		twitter: "https://twitter.com/luxiormall",
-		instagram: "https://instagram.com/luxiormall",
-		linkedin: "https://linkedin.com/company/luxiormall",
-		youtube: "https://youtube.com/@luxiormall",
-		tiktok: "",
-		pinterest: "",
+		facebook: "https://facebook.com/luxiorstore",
+		twitter: "https://twitter.com/luxiorstore",
+		instagram: "https://instagram.com/luxiorstore",
+		linkedin: "https://linkedin.com/company/luxiorstore",
+		youtube: "https://youtube.com/@luxiorstore",
+		tiktok: "https://tiktok.com/@luxiorstore",
+		pinterest: "https://pinterest.com/luxiorstore",
 	},
 
 	// SEO Configuration
 	seo: {
-		defaultTitle: "LuxiorMall - Premium Shopping Experience",
-		titleTemplate: "%s | LuxiorMall",
-		defaultDescription: "Discover premium products with exceptional quality and service at LuxiorMall",
+		defaultTitle: "Luxiorstore - Luxury Redefined",
+		titleTemplate: "%s | Luxiorstore",
+		defaultDescription:
+			"Discover premium luxury products with exceptional quality and unmatched service at Luxiorstore",
 		keywords: ["premium shopping", "luxury products", "online store", "quality goods"],
 		ogImage: "/images/og-image.jpg",
 		twitterCard: "summary_large_image",
