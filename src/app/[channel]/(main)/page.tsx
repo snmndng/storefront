@@ -22,18 +22,33 @@ export default async function Page(props: { params: Promise<{ channel: string }>
 	if (!data.collection?.products) {
 		return (
 			<div className="flex min-h-screen items-center justify-center">
-				<div className="text-center">
-					<h1 className="mb-4 text-2xl font-bold text-gray-900">Welcome to Luxiorstore</h1>
-					<p className="mb-8 text-gray-600">
-						No featured products found. Please check your Saleor backend configuration.
-					</p>
-					<div className="mx-auto max-w-md rounded-lg border border-yellow-200 bg-yellow-50 p-4">
-						<p className="text-sm text-yellow-800">
-							Make sure your <code className="rounded bg-yellow-100 px-1">.env</code> file contains the
-							correct
-							<code className="ml-1 rounded bg-yellow-100 px-1">NEXT_PUBLIC_SALEOR_API_URL</code>
-						</p>
+				<div className="mx-auto max-w-md px-4 text-center">
+					<div className="mb-8">
+						<div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-orange-500">
+							<span className="text-2xl font-bold text-white">L</span>
+						</div>
+						<h1 className="mb-2 text-3xl font-bold text-gray-900">Welcome to Luxiorstore</h1>
+						<p className="text-lg font-medium text-amber-600">Luxury Redefined</p>
 					</div>
+
+					<div className="space-y-4">
+						<p className="text-gray-600">
+							We&apos;re currently updating our collection with new luxury products.
+						</p>
+						<p className="text-sm text-gray-500">Please check back soon for our latest arrivals.</p>
+					</div>
+
+					{/* Only show technical details in development */}
+					{process.env.NODE_ENV === "development" && (
+						<div className="mt-8 rounded-lg border border-yellow-200 bg-yellow-50 p-4">
+							<p className="text-sm text-yellow-800">
+								<strong>Development Note:</strong> No featured products found. Check your Saleor backend
+								configuration and ensure your <code className="rounded bg-yellow-100 px-1">.env</code> file
+								contains the correct{" "}
+								<code className="rounded bg-yellow-100 px-1">NEXT_PUBLIC_SALEOR_API_URL</code>
+							</p>
+						</div>
+					)}
 				</div>
 			</div>
 		);
