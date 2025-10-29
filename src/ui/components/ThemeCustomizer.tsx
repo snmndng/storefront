@@ -10,6 +10,11 @@ export function ThemeCustomizer() {
 	const [activeTheme, setActiveTheme] = useState("default");
 	const [customColors, setCustomColors] = useState(brandConfig.branding.colors);
 
+	// Only show in development mode
+	if (process.env.NODE_ENV === "production") {
+		return null;
+	}
+
 	const handleThemeChange = (themeName: string) => {
 		setActiveTheme(themeName);
 		const theme = themeVariants[themeName as keyof typeof themeVariants];

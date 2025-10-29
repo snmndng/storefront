@@ -81,12 +81,14 @@ export default async function Page(props: { params: Promise<{ channel: string }>
 							>
 								Explore Collection
 							</a>
-							<Link
-								href="/demo"
-								className="inline-flex items-center justify-center rounded-xl border-2 border-amber-600 px-8 py-4 text-lg font-semibold text-amber-600 transition-all duration-300 hover:-translate-y-0.5 hover:bg-amber-600 hover:text-white"
-							>
-								View Features
-							</Link>
+							{process.env.NODE_ENV === "development" && (
+								<Link
+									href="/demo"
+									className="inline-flex items-center justify-center rounded-xl border-2 border-amber-600 px-8 py-4 text-lg font-semibold text-amber-600 transition-all duration-300 hover:-translate-y-0.5 hover:bg-amber-600 hover:text-white"
+								>
+									View Features
+								</Link>
+							)}
 						</div>
 
 						{/* Trust Indicators */}
