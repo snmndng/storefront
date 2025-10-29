@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { ProductListByCollectionDocument } from "@/gql/graphql";
 import { executeGraphQL } from "@/lib/graphql";
 import { ProductList } from "@/ui/components/ProductList";
@@ -89,21 +88,13 @@ export default async function Page(props: { params: Promise<{ channel: string }>
 							our collection is carefully curated for the discerning individual.
 						</p>
 
-						<div className="mt-12 flex flex-col justify-center gap-4 sm:flex-row">
+						<div className="mt-12 flex justify-center">
 							<a
 								href="#featured-products"
 								className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:from-amber-700 hover:to-orange-700 hover:shadow-xl"
 							>
 								Explore Collection
 							</a>
-							{process.env.NODE_ENV === "development" && (
-								<Link
-									href="/demo"
-									className="inline-flex items-center justify-center rounded-xl border-2 border-amber-600 px-8 py-4 text-lg font-semibold text-amber-600 transition-all duration-300 hover:-translate-y-0.5 hover:bg-amber-600 hover:text-white"
-								>
-									View Features
-								</Link>
-							)}
 						</div>
 
 						{/* Trust Indicators */}

@@ -1,7 +1,6 @@
 import { type ReactNode } from "react";
 import { Footer } from "@/ui/components/Footer";
 import { Header } from "@/ui/components/Header";
-import { ThemeCustomizer } from "@/ui/components/ThemeCustomizer";
 import { ErrorBoundary } from "@/ui/components/ErrorBoundary";
 import { ToastProvider } from "@/ui/components/Toast";
 
@@ -24,7 +23,6 @@ export default async function RootLayout(props: {
 					<Header channel={channel} />
 					<main className="flex-1">{props.children}</main>
 					<Footer channel={channel} />
-					<ThemeCustomizer />
 				</div>
 			</ToastProvider>
 		</ErrorBoundary>
