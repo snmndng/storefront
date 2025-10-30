@@ -28,14 +28,22 @@
 ```env
 # Production Environment Variables
 NODE_ENV=production
-NEXT_PUBLIC_SALEOR_API_URL=https://your-production-api.com/graphql/
-NEXT_PUBLIC_STOREFRONT_URL=https://your-domain.com
+NEXT_PUBLIC_SALEOR_API_URL=https://www.api.luxiormall.com/graphql/
+NEXT_PUBLIC_STOREFRONT_URL=https://luxiorstore.co.ke
+NEXT_PUBLIC_CHANNEL=default-channel
 SALEOR_APP_TOKEN=your-production-app-token
 
 # Optional Analytics (Recommended for Production)
 NEXT_PUBLIC_GA_ID=your-google-analytics-id
 NEXT_PUBLIC_FACEBOOK_PIXEL_ID=your-facebook-pixel-id
 ```
+
+### Important Notes for Deployment:
+
+1. **Domain Configuration**: Make sure your domain is set to `luxiorstore.co.ke` (or your actual domain)
+2. **Channel Routing**: The app uses `/default-channel/` as the base route structure
+3. **API URL**: Ensure your Saleor API is accessible at the configured URL
+4. **SSL**: Always use HTTPS in production for security
 
 ### Build Commands
 
