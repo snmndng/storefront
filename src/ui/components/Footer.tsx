@@ -1,5 +1,3 @@
-import Link from "next/link";
-import Image from "next/image";
 import {
 	Facebook,
 	Instagram,
@@ -420,33 +418,6 @@ export async function Footer({ channel }: { channel: string }) {
 								Accessibility
 							</LinkWithChannel>
 						</div>
-					</div>
-
-					{/* Powered by Saleor */}
-					<div className="mt-6 flex items-center justify-center border-t border-gray-800 pt-6">
-						<p className="flex items-center gap-2 text-sm text-gray-500">
-							Powered by{" "}
-							<Link
-								target={"_blank"}
-								href={"https://saleor.io/"}
-								className="text-gray-400 transition-colors hover:text-amber-400"
-							>
-								Saleor
-							</Link>{" "}
-							<Link
-								href={"https://github.com/saleor/saleor"}
-								target={"_blank"}
-								className="opacity-60 transition-opacity hover:opacity-100"
-							>
-								<Image
-									alt="Saleor github repository"
-									height={16}
-									width={16}
-									src={"/github-mark.svg"}
-									className="invert"
-								/>
-							</Link>
-						</p>
 					</div>
 				</div>
 			</div>
