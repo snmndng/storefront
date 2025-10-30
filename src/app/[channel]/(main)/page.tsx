@@ -120,7 +120,7 @@ export default async function Page(props: { params: Promise<{ channel: string }>
 									</svg>
 								</div>
 								<h3 className="mt-4 text-lg font-semibold text-gray-900">Fast Delivery</h3>
-								<p className="mt-2 text-sm text-gray-600">Free shipping over $100</p>
+								<p className="mt-2 text-sm text-gray-600">Free shipping over KSh 5,000</p>
 							</div>
 							<div className="flex flex-col items-center">
 								<div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white">
