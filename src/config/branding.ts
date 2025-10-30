@@ -6,16 +6,28 @@ export const brandConfig = {
 	company: {
 		name: "Luxiorstore",
 		tagline: "Luxury Redefined",
-		description: "Discover premium luxury products with exceptional quality and unmatched service",
-		founded: "2025",
-		email: "hello@luxiorstore.com",
-		phone: "+254 797923313",
+		description:
+			"Discover premium luxury products with exceptional quality and unmatched service across Kenya",
+		founded: "2024",
+		email: "hello@luxiorstore.co.ke",
+		phone: "+254 797 923 313",
+		whatsapp: "+254 797 923 313",
 		address: {
-			street: "123 Luxury Avenue",
+			street: "Westlands Road, ABC Place",
 			city: "Nairobi",
-			state: "Ke",
-			zip: "10001",
+			county: "Nairobi County",
+			postalCode: "00100",
 			country: "Kenya",
+		},
+		currency: {
+			code: "KES",
+			symbol: "KSh",
+			name: "Kenyan Shilling",
+		},
+		shipping: {
+			domestic: "Free shipping within Nairobi for orders over KSh 5,000",
+			nationwide: "Nationwide delivery across Kenya",
+			international: "International shipping available to East Africa",
 		},
 	},
 
