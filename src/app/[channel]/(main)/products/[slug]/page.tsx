@@ -119,7 +119,8 @@ export default async function Page(props: {
 			channel: params.channel,
 			error: error instanceof Error ? error.message : String(error),
 		});
-		throw error; // Let the error boundary handle it instead of notFound()
+		// Return not found instead of throwing to avoid 500 error
+		notFound();
 	}
 
 	if (!product) {
