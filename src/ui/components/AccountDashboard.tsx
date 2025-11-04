@@ -126,7 +126,7 @@ export async function AccountDashboard({ channel }: AccountDashboardProps) {
 			<div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
 				<div className="mb-6 flex items-center justify-between">
 					<h3 className="text-xl font-semibold text-gray-900">Recent Orders</h3>
-					<Link href="/account/orders" className="text-sm font-medium text-amber-600 hover:text-amber-700">
+					<Link href="/orders" className="text-sm font-medium text-amber-600 hover:text-amber-700">
 						View All Orders
 					</Link>
 				</div>

@@ -34,6 +34,10 @@ export function LoginForm() {
 				}
 				// If successful, the login action will handle the redirect
 			} catch (error) {
+				// Don't show error for redirects (which are expected on successful login)
+				if (error instanceof Error && error.message === "NEXT_REDIRECT") {
+					return; // Redirect is happening, don't show error
+				}
 				console.error("Login error:", error);
 				setErrors(["An unexpected error occurred. Please try again."]);
 			}
@@ -69,6 +73,16 @@ export function LoginForm() {
 									Don&apos;t have an account? Create one here →
 								</LinkWithChannel>
 							</div>
+							{process.env.NODE_ENV === "development" && (
+								<div className="mt-3">
+									<LinkWithChannel
+										href="/debug-auth"
+										className="text-sm font-medium text-blue-600 underline hover:text-blue-500"
+									>
+										Debug Authentication →
+									</LinkWithChannel>
+								</div>
+							)}
 						</div>
 					</div>
 				</div>

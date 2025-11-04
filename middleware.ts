@@ -1,4 +1,4 @@
-import { NextResponse ,type  NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
 	const { pathname } = request.nextUrl;
@@ -20,6 +20,11 @@ export function middleware(request: NextRequest) {
 		"/register": `/${defaultChannel}/register`,
 		"/cart": `/${defaultChannel}/cart`,
 		"/account": `/${defaultChannel}/account`,
+		"/account/profile": `/${defaultChannel}/account/profile`,
+		"/account/settings": `/${defaultChannel}/account/settings`,
+		"/account/addresses": `/${defaultChannel}/account/addresses`,
+		"/account/wishlist": `/${defaultChannel}/account/wishlist`,
+		"/orders": `/${defaultChannel}/orders`,
 		"/search": `/${defaultChannel}/search`,
 		"/categories": `/${defaultChannel}/categories`,
 		"/shipping": `/${defaultChannel}/shipping`,
@@ -31,10 +36,23 @@ export function middleware(request: NextRequest) {
 		"/track-order": `/${defaultChannel}/track-order`,
 		"/size-guide": `/${defaultChannel}/size-guide`,
 		"/newsletter": `/${defaultChannel}/newsletter`,
+		"/support": `/${defaultChannel}/support`,
+		"/cookies": `/${defaultChannel}/cookies`,
+		"/accessibility": `/${defaultChannel}/accessibility`,
 	};
 
 	if (redirects[pathname]) {
 		return NextResponse.redirect(new URL(redirects[pathname], request.url));
+	}
+
+	// Handle specific incorrect account paths
+	if (pathname === "/account/products" || pathname === `/${defaultChannel}/account/products`) {
+		return NextResponse.redirect(new URL(`/${defaultChannel}/products`, request.url));
+	}
+
+	// Handle any /account/* paths that don't have a channel prefix
+	if (pathname.startsWith("/account/") && !pathname.startsWith(`/${defaultChannel}/`)) {
+		return NextResponse.redirect(new URL(`/${defaultChannel}${pathname}`, request.url));
 	}
 
 	// Handle old channel names (redirect any other channel to the default one)

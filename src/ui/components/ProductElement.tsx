@@ -53,7 +53,7 @@ export function ProductElement({
 					</div>
 				)}
 
-				<LinkWithChannel href={`/products/${product.slug}`} key={product.id}>
+				<LinkWithChannel href={`/products/${encodeURIComponent(product.slug)}`} key={product.id}>
 					{/* Product Image */}
 					<div className="relative overflow-hidden rounded-t-xl bg-gray-100">
 						{product?.thumbnail?.url && (

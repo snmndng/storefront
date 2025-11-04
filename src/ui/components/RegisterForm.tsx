@@ -71,14 +71,22 @@ export function RegisterForm() {
 				});
 
 				if (result.success) {
-					setSuccess(true);
-					setTimeout(() => {
-						router.push(`/${currentChannel}/login?registered=true`);
-					}, 2000);
+					if (result.message) {
+						// Registration successful but auto-login failed
+						setSuccess(true);
+						setTimeout(() => {
+							router.push(`/${currentChannel}/login?registered=true`);
+						}, 2000);
+					}
+					// If no message, auto-login was successful and redirect will happen automatically
 				} else {
 					setErrors(result.errors || ["Registration failed. Please try again."]);
 				}
 			} catch (error) {
+				// Don't show error for redirects (which are expected on successful auto-login)
+				if (error instanceof Error && error.message === "NEXT_REDIRECT") {
+					return; // Redirect is happening, don't show error
+				}
 				console.error("Registration error:", error);
 				setErrors(["An unexpected error occurred. Please try again."]);
 			}

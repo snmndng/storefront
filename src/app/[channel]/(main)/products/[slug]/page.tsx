@@ -93,17 +93,33 @@ export default async function Page(props: {
 
 	let product;
 	try {
+		console.log("Fetching product with slug:", params.slug, "channel:", params.channel);
+		const decodedSlug = decodeURIComponent(params.slug);
+		console.log("Decoded slug:", decodedSlug);
+
 		const result = await executeGraphQL(ProductDetailsDocument, {
 			variables: {
-				slug: decodeURIComponent(params.slug),
+				slug: decodedSlug,
 				channel: params.channel,
 			},
 			revalidate: 60,
 		});
+
+		console.log("GraphQL result:", result);
 		product = result.product;
+
+		if (!product) {
+			console.log("Product not found for slug:", decodedSlug);
+		}
 	} catch (error) {
 		console.error("Error fetching product:", error);
-		notFound();
+		console.error("Error details:", {
+			slug: params.slug,
+			decodedSlug: decodeURIComponent(params.slug),
+			channel: params.channel,
+			error: error instanceof Error ? error.message : String(error),
+		});
+		throw error; // Let the error boundary handle it instead of notFound()
 	}
 
 	if (!product) {

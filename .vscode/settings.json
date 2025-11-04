@@ -17,5 +17,8 @@
 	"files.associations": {
 		"*.css": "tailwindcss"
 	},
-	"kiroAgent.configureMCP": "Disabled"
+	"kiroAgent.configureMCP": "Disabled",
+	"[typescript]": {
+		"editor.defaultFormatter": "vscode.typescript-language-features"
+	}
 }
