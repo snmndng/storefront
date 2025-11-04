@@ -245,3 +245,86 @@
 		transform: scale(1);
 	}
 }
+/* Mobile-Specific Styles for Android */
+@layer utilities {
+	/* Ensure search inputs are properly styled on Android */
+	.search-input {
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
+		@apply w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-base text-gray-900 placeholder-gray-500 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20;
+	}
+
+	/* Android-specific input fixes */
+	@supports (-webkit-touch-callout: none) {
+		.search-input {
+			font-size: 16px; /* Prevents zoom on iOS */
+		}
+	}
+
+	/* Mobile search overlay */
+	.mobile-search-overlay {
+		@apply fixed inset-0 z-50 bg-white;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	/* Touch-friendly buttons for mobile */
+	.mobile-touch-target {
+		@apply flex min-h-[44px] min-w-[44px] items-center justify-center;
+	}
+
+	/* Prevent zoom on form inputs for mobile */
+	@media screen and (max-width: 768px) {
+		input[type="text"],
+		input[type="email"],
+		input[type="password"],
+		input[type="search"],
+		textarea,
+		select {
+			font-size: 16px !important;
+		}
+	}
+
+	/* Android Chrome address bar compensation */
+	.mobile-vh-fix {
+		height: 100vh;
+		height: calc(var(--vh, 1vh) * 100);
+	}
+
+	/* Smooth scrolling for mobile */
+	.mobile-scroll {
+		-webkit-overflow-scrolling: touch;
+		overscroll-behavior: contain;
+	}
+
+	/* High contrast for better visibility on mobile */
+	@media (max-width: 640px) {
+		.mobile-high-contrast {
+			@apply border-2 border-gray-400 bg-white text-gray-900;
+		}
+
+		.mobile-search-button {
+			@apply rounded-lg bg-amber-600 p-3 text-white shadow-lg;
+		}
+	}
+}
+
+/* Android-specific fixes */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+	.search-input:focus {
+		outline: none;
+		box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+	}
+}
+
+/* Ensure proper touch targets on mobile */
+@media (hover: none) and (pointer: coarse) {
+	button,
+	.clickable {
+		@apply min-h-[44px] min-w-[44px];
+	}
+
+	.search-button {
+		@apply p-3;
+	}
+}

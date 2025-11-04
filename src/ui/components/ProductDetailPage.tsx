@@ -285,8 +285,8 @@ export function ProductDetailPage({ product }: ProductDetailPageProps) {
 						<div className="flex items-center space-x-3">
 							<Truck className="h-5 w-5 text-amber-600" />
 							<div>
-								<p className="text-sm font-medium">Free Shipping</p>
-								<p className="text-xs text-gray-500">On orders over $100</p>
+								<p className="text-sm font-medium">Fast Delivery</p>
+								<p className="text-xs text-gray-500">1-3 hours in Nairobi</p>
 							</div>
 						</div>
 						<div className="flex items-center space-x-3">

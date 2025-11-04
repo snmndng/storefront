@@ -11,25 +11,22 @@ export const SearchBar = ({ channel }: { channel: string }) => {
 	}
 
 	return (
-		<form
-			action={onSubmit}
-			className="group relative my-2 flex w-full items-center justify-items-center text-sm lg:w-80"
-		>
+		<form action={onSubmit} className="group relative flex w-full items-center justify-items-center text-sm">
 			<label className="w-full">
 				<span className="sr-only">search for products</span>
 				<input
-					type="text"
+					type="search"
 					name="search"
-					placeholder="Search for products..."
+					placeholder="Search products..."
 					autoComplete="on"
 					required
-					className="h-10 w-full rounded-md border border-neutral-300 bg-transparent bg-white px-4 py-2 pr-10 text-sm text-black placeholder:text-neutral-500 focus:border-black focus:ring-black"
+					className="search-input h-10 pr-10 text-sm sm:placeholder:text-gray-500"
 				/>
 			</label>
 			<div className="absolute inset-y-0 right-0">
 				<button
 					type="submit"
-					className="inline-flex aspect-square w-10 items-center justify-center text-neutral-500 hover:text-neutral-700 focus:text-neutral-700 group-invalid:pointer-events-none group-invalid:opacity-80"
+					className="inline-flex aspect-square w-10 items-center justify-center text-gray-500 transition-colors hover:text-amber-600 focus:text-amber-600 group-invalid:pointer-events-none group-invalid:opacity-80"
 				>
 					<span className="sr-only">search</span>
 					<SearchIcon aria-hidden className="h-5 w-5" />

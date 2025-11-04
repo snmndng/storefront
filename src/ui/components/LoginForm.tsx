@@ -1,63 +1,186 @@
-import { getServerAuthClient } from "@/app/config";
+"use client";
 
-export async function LoginForm() {
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { LogIn, User, AlertCircle, Eye, EyeOff } from "lucide-react";
+import { Button } from "@/ui/components/Button";
+
+export function LoginForm() {
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const [showPassword, setShowPassword] = useState(false);
+	const [errors, setErrors] = useState<string[]>([]);
+	const [isLoading, setIsLoading] = useState(false);
+	const router = useRouter();
+
+	const handleSubmit = async (e: React.FormEvent) => {
+		e.preventDefault();
+		setIsLoading(true);
+		setErrors([]);
+
+		if (!email || !password) {
+			setErrors(["Email and password are required"]);
+			setIsLoading(false);
+			return;
+		}
+
+		try {
+			// Simulate login API call
+			const response = await fetch("/api/auth/login", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ email, password }),
+			});
+
+			if (response.ok) {
+				router.push("/account");
+			} else {
+				if (response.status === 404 || response.status === 401) {
+					setErrors([
+						"Account not found or invalid credentials.",
+						"Please check your email and password, or create a new account.",
+					]);
+				} else {
+					try {
+						const errorData = (await response.json()) as { message?: string };
+						setErrors([errorData.message || "Login failed. Please try again."]);
+					} catch {
+						setErrors(["Login failed. Please try again."]);
+					}
+				}
+			}
+		} catch (error) {
+			setErrors(["Unable to sign in at the moment.", "Please check your internet connection and try again."]);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
 	return (
 		<div className="mx-auto mt-16 w-full max-w-lg">
-			<form
-				className="rounded border p-8 shadow-md"
-				action={async (formData) => {
-					"use server";
+			<div className="mb-8 text-center">
+				<div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500">
+					<User className="h-8 w-8 text-white" />
+				</div>
+				<h1 className="mb-2 text-3xl font-bold text-gray-900">Welcome Back</h1>
+				<p className="text-gray-600">Sign in to your Luxiorstore account</p>
+			</div>
 
-					const email = formData.get("email")?.toString();
-					const password = formData.get("password")?.toString();
+			{/* Error Messages */}
+			{errors.length > 0 && (
+				<div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4">
+					<div className="flex items-start">
+						<AlertCircle className="mr-3 mt-0.5 h-5 w-5 flex-shrink-0 text-red-500" />
+						<div>
+							{errors.map((error, index) => (
+								<p key={index} className="text-sm text-red-700">
+									{error}
+								</p>
+							))}
+							<div className="mt-3">
+								<Link
+									href="/register"
+									className="text-sm font-medium text-red-600 underline hover:text-red-500"
+								>
+									Don&apos;t have an account? Create one here →
+								</Link>
+							</div>
+						</div>
+					</div>
+				</div>
+			)}
 
-					if (!email || !password) {
-						throw new Error("Email and password are required");
-					}
-
-					const { data } = await (
-						await getServerAuthClient()
-					).signIn({ email, password }, { cache: "no-store" });
-
-					if (data.tokenCreate.errors.length > 0) {
-						// setErrors(data.tokenCreate.errors.map((error) => error.message));
-						// setFormValues(DefaultValues);
-					}
-				}}
-			>
-				<div className="mb-2">
-					<label className="sr-only" htmlFor="email">
-						Email
+			<form className="rounded-lg border border-gray-200 bg-white p-8 shadow-sm" onSubmit={handleSubmit}>
+				<div className="mb-4">
+					<label htmlFor="email" className="mb-2 block text-sm font-medium text-gray-700">
+						Email Address
 					</label>
 					<input
 						type="email"
-						name="email"
-						placeholder="Email"
-						className="w-full rounded border bg-neutral-50 px-4 py-2"
+						id="email"
+						value={email}
+						onChange={(e) => setEmail(e.target.value)}
+						required
+						placeholder="Enter your email address"
+						className="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 text-gray-900 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20"
 					/>
 				</div>
-				<div className="mb-4">
-					<label className="sr-only" htmlFor="password">
+				<div className="mb-6">
+					<label htmlFor="password" className="mb-2 block text-sm font-medium text-gray-700">
 						Password
 					</label>
-					<input
-						type="password"
-						name="password"
-						placeholder="Password"
-						autoCapitalize="off"
-						autoComplete="off"
-						className="w-full rounded border bg-neutral-50 px-4 py-2"
-					/>
+					<div className="relative">
+						<input
+							type={showPassword ? "text" : "password"}
+							id="password"
+							value={password}
+							onChange={(e) => setPassword(e.target.value)}
+							required
+							placeholder="Enter your password"
+							autoCapitalize="off"
+							autoComplete="current-password"
+							className="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 pr-12 text-gray-900 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+						/>
+						<button
+							type="button"
+							onClick={() => setShowPassword(!showPassword)}
+							className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+						>
+							{showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+						</button>
+					</div>
 				</div>
 
-				<button
-					className="rounded bg-neutral-800 px-4 py-2 text-neutral-200 hover:bg-neutral-700"
+				<div className="mb-6 flex items-center justify-between">
+					<label className="flex items-center">
+						<input
+							type="checkbox"
+							name="remember"
+							className="rounded border-gray-300 text-amber-600 focus:ring-amber-500"
+						/>
+						<span className="ml-2 text-sm text-gray-600">Remember me</span>
+					</label>
+					<Link
+						href="/forgot-password"
+						className="text-sm text-amber-600 transition-colors hover:text-amber-700 hover:underline"
+					>
+						Forgot password?
+					</Link>
+				</div>
+
+				<Button
 					type="submit"
+					variant="primary"
+					size="lg"
+					fullWidth
+					loading={isLoading}
+					disabled={isLoading}
+					icon={<LogIn className="h-5 w-5" />}
 				>
-					Log In
-				</button>
+					{isLoading ? "Signing In..." : "Sign In"}
+				</Button>
 			</form>
-			<div></div>
+
+			<div className="mt-6 text-center">
+				<p className="text-sm text-gray-600">
+					Don&apos;t have an account?{" "}
+					<Link
+						href="/register"
+						className="font-medium text-amber-600 transition-colors hover:text-amber-700 hover:underline"
+					>
+						Create one here
+					</Link>
+				</p>
+			</div>
+
+			<div className="mt-8 rounded-lg bg-amber-50 p-4">
+				<h3 className="mb-2 font-medium text-amber-800">New to Luxiorstore?</h3>
+				<p className="text-sm text-amber-700">
+					Create an account to enjoy exclusive benefits, track your orders, and get personalized
+					recommendations.
+				</p>
+			</div>
 		</div>
 	);
 }

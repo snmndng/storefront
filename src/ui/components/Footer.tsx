@@ -306,7 +306,7 @@ export async function Footer({ channel }: { channel: string }) {
 							</div>
 							<div className="flex items-center space-x-2 text-xs text-gray-400">
 								<Truck className="h-3 w-3 text-blue-400" />
-								<span>Free Shipping Over KSh 5,000</span>
+								<span>Lightning-Fast Delivery</span>
 							</div>
 							<div className="flex items-center space-x-2 text-xs text-gray-400">
 								<RotateCcw className="h-3 w-3 text-amber-400" />

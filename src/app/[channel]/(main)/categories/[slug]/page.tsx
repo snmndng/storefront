@@ -2,11 +2,11 @@ import { notFound } from "next/navigation";
 import { type ResolvingMetadata, type Metadata } from "next";
 import { ProductListByCategoryDocument } from "@/gql/graphql";
 import { executeGraphQL } from "@/lib/graphql";
-import { ProductList } from "@/ui/components/ProductList";
+import { CategoryPageContent } from "@/ui/components/CategoryPageContent";
 
 export const generateMetadata = async (
 	props: { params: Promise<{ slug: string; channel: string }> },
-	parent: ResolvingMetadata,
+	_parent: ResolvingMetadata,
 ): Promise<Metadata> => {
 	const params = await props.params;
 	const { category } = await executeGraphQL(ProductListByCategoryDocument, {
@@ -14,9 +14,36 @@ export const generateMetadata = async (
 		revalidate: 60,
 	});
 
+	if (!category) {
+		return {
+			title: "Category Not Found - Luxiorstore",
+			description: "The requested category could not be found.",
+		};
+	}
+
+	const title = category.seoTitle || `${category.name} - Luxury Collection | Luxiorstore`;
+	const description =
+		category.seoDescription ||
+		category.description ||
+		`Discover our premium ${category.name.toLowerCase()} collection at Luxiorstore. Shop authentic luxury products with exceptional quality and service.`;
+
 	return {
-		title: `${category?.name || "Categroy"} | ${category?.seoTitle || (await parent).title?.absolute}`,
-		description: category?.seoDescription || category?.description || category?.seoTitle || category?.name,
+		title,
+		description,
+		openGraph: {
+			title,
+			description,
+			type: "website",
+			siteName: "Luxiorstore",
+		},
+		twitter: {
+			card: "summary_large_image",
+			title,
+			description,
+		},
+		alternates: {
+			canonical: `/categories/${params.slug}`,
+		},
 	};
 };
 
@@ -31,12 +58,5 @@ export default async function Page(props: { params: Promise<{ slug: string; chan
 		notFound();
 	}
 
-	const { name, products } = category;
-
-	return (
-		<div className="mx-auto max-w-7xl p-8 pb-16">
-			<h1 className="pb-8 text-xl font-semibold">{name}</h1>
-			<ProductList products={products.edges.map((e) => e.node)} />
-		</div>
-	);
+	return <CategoryPageContent category={category} />;
 }

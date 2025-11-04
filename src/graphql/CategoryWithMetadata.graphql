@@ -1,0 +1,62 @@
+query CategoryWithMetadata($slug: String!, $channel: String!) {
+	category(slug: $slug) {
+		id
+		name
+		slug
+		description
+		seoDescription
+		seoTitle
+		level
+		backgroundImage {
+			url
+			alt
+		}
+		parent {
+			id
+			name
+			slug
+		}
+		children(first: 20) {
+			edges {
+				node {
+					id
+					name
+					slug
+					description
+					backgroundImage {
+						url
+						alt
+					}
+					products(first: 1, channel: $channel) {
+						totalCount
+					}
+				}
+			}
+		}
+		ancestors(first: 10) {
+			edges {
+				node {
+					id
+					name
+					slug
+				}
+			}
+		}
+		metadata {
+			key
+			value
+		}
+		products(first: 100, channel: $channel) {
+			totalCount
+			edges {
+				node {
+					...ProductListItem
+					metadata {
+						key
+						value
+					}
+				}
+			}
+		}
+	}
+}

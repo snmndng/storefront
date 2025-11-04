@@ -1,0 +1,114 @@
+query UserAddresses {
+	me {
+		id
+		email
+		firstName
+		lastName
+		addresses {
+			id
+			firstName
+			lastName
+			streetAddress1
+			streetAddress2
+			city
+			postalCode
+			country {
+				code
+				country
+			}
+			phone
+			isDefaultBillingAddress
+			isDefaultShippingAddress
+		}
+		defaultBillingAddress {
+			id
+		}
+		defaultShippingAddress {
+			id
+		}
+	}
+}
+
+mutation AccountAddressCreate($input: AddressInput!) {
+	accountAddressCreate(input: $input) {
+		address {
+			id
+			firstName
+			lastName
+			streetAddress1
+			streetAddress2
+			city
+			postalCode
+			country {
+				code
+				country
+			}
+			phone
+			isDefaultBillingAddress
+			isDefaultShippingAddress
+		}
+		errors {
+			field
+			message
+			code
+		}
+	}
+}
+
+mutation AccountAddressUpdate($id: ID!, $input: AddressInput!) {
+	accountAddressUpdate(id: $id, input: $input) {
+		address {
+			id
+			firstName
+			lastName
+			streetAddress1
+			streetAddress2
+			city
+			postalCode
+			country {
+				code
+				country
+			}
+			phone
+			isDefaultBillingAddress
+			isDefaultShippingAddress
+		}
+		errors {
+			field
+			message
+			code
+		}
+	}
+}
+
+mutation AccountAddressDelete($id: ID!) {
+	accountAddressDelete(id: $id) {
+		address {
+			id
+		}
+		errors {
+			field
+			message
+			code
+		}
+	}
+}
+
+mutation AccountSetDefaultAddress($id: ID!, $type: AddressTypeEnum!) {
+	accountSetDefaultAddress(id: $id, type: $type) {
+		user {
+			id
+			defaultBillingAddress {
+				id
+			}
+			defaultShippingAddress {
+				id
+			}
+		}
+		errors {
+			field
+			message
+			code
+		}
+	}
+}

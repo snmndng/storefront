@@ -8,7 +8,7 @@ export const brandConfig = {
 		tagline: "Luxury Redefined",
 		description:
 			"Discover premium luxury products with exceptional quality and unmatched service across Kenya",
-		founded: "2024",
+		founded: "2025",
 		email: "hello@luxiorstore.co.ke",
 		phone: "+254 797 923 313",
 		whatsapp: "+254 797 923 313",
@@ -25,8 +25,8 @@ export const brandConfig = {
 			name: "Kenyan Shilling",
 		},
 		shipping: {
-			domestic: "Free shipping within Nairobi for orders over KSh 5,000",
-			nationwide: "Nationwide delivery across Kenya",
+			domestic: "Lightning-fast delivery within Nairobi",
+			nationwide: "Same-day delivery across Kenya",
 			international: "International shipping available to East Africa",
 		},
 	},

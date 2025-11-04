@@ -6,7 +6,7 @@ import { ProductList } from "@/ui/components/ProductList";
 
 export const generateMetadata = async (
 	props: { params: Promise<{ slug: string; channel: string }> },
-	parent: ResolvingMetadata,
+	_parent: ResolvingMetadata,
 ): Promise<Metadata> => {
 	const params = await props.params;
 	const { collection } = await executeGraphQL(ProductListByCollectionDocument, {
@@ -14,8 +14,12 @@ export const generateMetadata = async (
 		revalidate: 60,
 	});
 
+	const parentMetadata = await _parent;
+
 	return {
-		title: `${collection?.name || "Collection"} | ${collection?.seoTitle || (await parent).title?.absolute}`,
+		title: `${collection?.name || "Collection"} | ${
+			collection?.seoTitle || parentMetadata.title?.absolute || "Luxiorstore"
+		}`,
 		description:
 			collection?.seoDescription || collection?.description || collection?.seoTitle || collection?.name,
 	};
