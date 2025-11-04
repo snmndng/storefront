@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { UserPlus, AlertCircle, CheckCircle, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/ui/components/Button";
+import { LinkWithChannel } from "@/ui/atoms/LinkWithChannel";
 
 export function RegisterForm() {
 	const [formData, setFormData] = useState({
@@ -23,6 +23,7 @@ export function RegisterForm() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [success, setSuccess] = useState(false);
 	const router = useRouter();
+	const { channel } = useParams<{ channel?: string }>();
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value, type, checked } = e.target;
@@ -73,7 +74,8 @@ export function RegisterForm() {
 			if (response.ok) {
 				setSuccess(true);
 				setTimeout(() => {
-					router.push("/login?registered=true");
+					const currentChannel = channel || "default-channel";
+					router.push(`/${currentChannel}/login?registered=true`);
 				}, 2000);
 			} else {
 				if (response.status === 409) {
@@ -106,12 +108,12 @@ export function RegisterForm() {
 					<p className="mb-4 text-green-700">
 						Welcome to Luxiorstore! You will be redirected to the login page shortly.
 					</p>
-					<Link
+					<LinkWithChannel
 						href="/login"
 						className="inline-flex items-center rounded-lg bg-green-600 px-4 py-2 text-white transition-colors hover:bg-green-700"
 					>
 						Continue to Login
-					</Link>
+					</LinkWithChannel>
 				</div>
 			</div>
 		);
@@ -283,13 +285,13 @@ export function RegisterForm() {
 						/>
 						<span className="text-sm text-gray-700">
 							I agree to the{" "}
-							<Link href="/terms" className="text-amber-600 hover:underline">
+							<LinkWithChannel href="/terms" className="text-amber-600 hover:underline">
 								Terms of Service
-							</Link>{" "}
+							</LinkWithChannel>{" "}
 							and{" "}
-							<Link href="/privacy" className="text-amber-600 hover:underline">
+							<LinkWithChannel href="/privacy" className="text-amber-600 hover:underline">
 								Privacy Policy
-							</Link>
+							</LinkWithChannel>
 						</span>
 					</label>
 				</div>
@@ -310,12 +312,12 @@ export function RegisterForm() {
 			<div className="mt-6 text-center">
 				<p className="text-sm text-gray-600">
 					Already have an account?{" "}
-					<Link
+					<LinkWithChannel
 						href="/login"
 						className="font-medium text-amber-600 transition-colors hover:text-amber-700 hover:underline"
 					>
 						Sign in here
-					</Link>
+					</LinkWithChannel>
 				</p>
 			</div>
 

@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { LogIn, User, AlertCircle, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/ui/components/Button";
+import { LinkWithChannel } from "@/ui/atoms/LinkWithChannel";
 
 export function LoginForm() {
 	const [email, setEmail] = useState("");
@@ -13,6 +13,7 @@ export function LoginForm() {
 	const [errors, setErrors] = useState<string[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const router = useRouter();
+	const { channel } = useParams<{ channel?: string }>();
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -34,7 +35,8 @@ export function LoginForm() {
 			});
 
 			if (response.ok) {
-				router.push("/account");
+				const currentChannel = channel || "default-channel";
+				router.push(`/${currentChannel}/account`);
 			} else {
 				if (response.status === 404 || response.status === 401) {
 					setErrors([
@@ -79,12 +81,12 @@ export function LoginForm() {
 								</p>
 							))}
 							<div className="mt-3">
-								<Link
+								<LinkWithChannel
 									href="/register"
 									className="text-sm font-medium text-red-600 underline hover:text-red-500"
 								>
 									Don&apos;t have an account? Create one here →
-								</Link>
+								</LinkWithChannel>
 							</div>
 						</div>
 					</div>
@@ -141,12 +143,12 @@ export function LoginForm() {
 						/>
 						<span className="ml-2 text-sm text-gray-600">Remember me</span>
 					</label>
-					<Link
+					<LinkWithChannel
 						href="/forgot-password"
 						className="text-sm text-amber-600 transition-colors hover:text-amber-700 hover:underline"
 					>
 						Forgot password?
-					</Link>
+					</LinkWithChannel>
 				</div>
 
 				<Button
@@ -165,12 +167,12 @@ export function LoginForm() {
 			<div className="mt-6 text-center">
 				<p className="text-sm text-gray-600">
 					Don&apos;t have an account?{" "}
-					<Link
+					<LinkWithChannel
 						href="/register"
 						className="font-medium text-amber-600 transition-colors hover:text-amber-700 hover:underline"
 					>
 						Create one here
-					</Link>
+					</LinkWithChannel>
 				</p>
 			</div>
 
