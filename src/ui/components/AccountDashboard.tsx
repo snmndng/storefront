@@ -1,18 +1,40 @@
 import Link from "next/link";
 import { User, Package, MapPin, Settings, LogOut } from "lucide-react";
+import { CurrentUserOrderListDocument, PaymentChargeStatusEnum } from "@/gql/graphql";
+import { executeGraphQL } from "@/lib/graphql";
+import { formatMoney, formatDate } from "@/lib/utils";
 
 interface AccountDashboardProps {
 	channel: string;
 }
 
-export function AccountDashboard({}: AccountDashboardProps) {
-	// This would fetch real user data from Saleor API using CurrentUserOrderList query
-	const user = {
-		name: "Sarah Johnson",
-		email: "sarah@example.com",
-		totalOrders: 12,
-		totalSpent: 245000,
-	};
+export async function AccountDashboard({ channel }: AccountDashboardProps) {
+	// Fetch real user data from Saleor API
+	const { me: user } = await executeGraphQL(CurrentUserOrderListDocument, {
+		cache: "no-cache",
+	});
+
+	if (!user) {
+		return (
+			<div className="flex min-h-[400px] items-center justify-center">
+				<div className="text-center">
+					<h2 className="text-xl font-semibold text-gray-900">Please sign in to view your account</h2>
+					<p className="mt-2 text-gray-600">You need to be logged in to access your account dashboard.</p>
+				</div>
+			</div>
+		);
+	}
+
+	const userName =
+		user.firstName && user.lastName
+			? `${user.firstName} ${user.lastName}`
+			: user.firstName || user.email.split("@")[0];
+
+	const orders = user.orders?.edges?.map((edge) => edge.node) || [];
+	const totalOrders = orders.length;
+	const totalSpent = orders.reduce((sum, order) => {
+		return sum + (order.total?.gross?.amount || 0);
+	}, 0);
 
 	const quickActions = [
 		{
@@ -20,7 +42,7 @@ export function AccountDashboard({}: AccountDashboardProps) {
 			description: "View and track your orders",
 			icon: <Package className="h-6 w-6" />,
 			href: "/orders",
-			count: user.totalOrders,
+			count: totalOrders,
 		},
 		{
 			title: "Addresses",
@@ -52,16 +74,18 @@ export function AccountDashboard({}: AccountDashboardProps) {
 			<div className="rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 p-8 text-white">
 				<div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
 					<div>
-						<h1 className="mb-2 text-3xl font-bold">Welcome back, {user.name}!</h1>
+						<h1 className="mb-2 text-3xl font-bold">Welcome back, {userName}!</h1>
 						<p className="text-amber-100">Luxiorstore Customer</p>
 					</div>
 					<div className="flex gap-6 text-center lg:text-right">
 						<div>
-							<div className="text-2xl font-bold">{user.totalOrders}</div>
+							<div className="text-2xl font-bold">{totalOrders}</div>
 							<div className="text-sm text-amber-100">Orders</div>
 						</div>
 						<div>
-							<div className="text-2xl font-bold">KSh {user.totalSpent.toLocaleString()}</div>
+							<div className="text-2xl font-bold">
+								{totalSpent > 0 ? formatMoney(totalSpent, "KES") : "KSh 0"}
+							</div>
 							<div className="text-sm text-amber-100">Total Spent</div>
 						</div>
 					</div>
@@ -107,56 +131,55 @@ export function AccountDashboard({}: AccountDashboardProps) {
 				</div>
 
 				<div className="space-y-4">
-					{/* Mock recent orders */}
-					{[
-						{
-							id: "LUX-2025-001234",
-							date: "Nov 1, 2025",
-							status: "Delivered",
-							total: "KSh 45,000",
-							items: 2,
-						},
-						{
-							id: "LUX-2025-001233",
-							date: "Oct 28, 2025",
-							status: "In Transit",
-							total: "KSh 28,500",
-							items: 1,
-						},
-						{
-							id: "LUX-2025-001232",
-							date: "Oct 25, 2025",
-							status: "Delivered",
-							total: "KSh 67,200",
-							items: 3,
-						},
-					].map((order) => (
-						<div
-							key={order.id}
-							className="flex items-center justify-between border-b border-gray-100 pb-4 last:border-b-0 last:pb-0"
-						>
-							<div>
-								<div className="font-medium text-gray-900">Order #{order.id}</div>
-								<div className="text-sm text-gray-600">
-									{order.date} • {order.items} items
+					{orders.length > 0 ? (
+						orders.slice(0, 3).map((order) => (
+							<div
+								key={order.id}
+								className="flex items-center justify-between border-b border-gray-100 pb-4 last:border-b-0 last:pb-0"
+							>
+								<div>
+									<div className="font-medium text-gray-900">Order #{order.number}</div>
+									<div className="text-sm text-gray-600">
+										{formatDate(order.created)} • {order.lines?.length || 0} items
+									</div>
+								</div>
+								<div className="text-right">
+									<div className="font-medium text-gray-900">
+										{order.total?.gross
+											? formatMoney(order.total.gross.amount, order.total.gross.currency)
+											: "N/A"}
+									</div>
+									<div
+										className={`text-sm ${
+											order.paymentStatus === PaymentChargeStatusEnum.FullyCharged
+												? "text-green-600"
+												: order.paymentStatus === PaymentChargeStatusEnum.Pending
+													? "text-blue-600"
+													: "text-gray-600"
+										}`}
+									>
+										{order.paymentStatus === PaymentChargeStatusEnum.FullyCharged
+											? "Paid"
+											: order.paymentStatus === PaymentChargeStatusEnum.Pending
+												? "Pending"
+												: order.paymentStatus || "Unknown"}
+									</div>
 								</div>
 							</div>
-							<div className="text-right">
-								<div className="font-medium text-gray-900">{order.total}</div>
-								<div
-									className={`text-sm ${
-										order.status === "Delivered"
-											? "text-green-600"
-											: order.status === "In Transit"
-												? "text-blue-600"
-												: "text-gray-600"
-									}`}
-								>
-									{order.status}
-								</div>
-							</div>
+						))
+					) : (
+						<div className="py-8 text-center text-gray-500">
+							<Package className="mx-auto mb-4 h-12 w-12 text-gray-300" />
+							<p className="text-lg font-medium">No orders yet</p>
+							<p className="text-sm">Start shopping to see your orders here!</p>
+							<Link
+								href={`/${channel}`}
+								className="mt-4 inline-flex items-center rounded-lg bg-amber-600 px-4 py-2 text-white transition-colors hover:bg-amber-700"
+							>
+								Start Shopping
+							</Link>
 						</div>
-					))}
+					)}
 				</div>
 			</div>
 

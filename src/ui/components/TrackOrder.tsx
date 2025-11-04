@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Search, Package, Truck, CheckCircle, Clock, MapPin } from "lucide-react";
+import { Search, Package, Truck, CheckCircle, Clock } from "lucide-react";
 import { Button } from "@/ui/components/Button";
 
 interface OrderItem {
@@ -29,65 +29,6 @@ interface OrderData {
 	timeline: TimelineStep[];
 }
 
-const mockOrderData: OrderData = {
-	orderNumber: "LUX-2025-001234",
-	status: "In Transit",
-	estimatedDelivery: "November 5, 2025",
-	trackingNumber: "TRK789456123",
-	items: [
-		{
-			name: "Luxury Leather Handbag",
-			quantity: 1,
-			price: "KES 45,000",
-		},
-	],
-	timeline: [
-		{
-			status: "Order Placed",
-			date: "November 1, 2025 - 2:30 PM",
-			description: "Your order has been received and is being processed",
-			completed: true,
-			icon: <Package className="h-5 w-5" />,
-		},
-		{
-			status: "Payment Confirmed",
-			date: "November 1, 2025 - 2:35 PM",
-			description: "Payment has been successfully processed",
-			completed: true,
-			icon: <CheckCircle className="h-5 w-5" />,
-		},
-		{
-			status: "Order Shipped",
-			date: "November 2, 2025 - 10:15 AM",
-			description: "Your order has been shipped and is on its way",
-			completed: true,
-			icon: <Truck className="h-5 w-5" />,
-		},
-		{
-			status: "In Transit",
-			date: "November 3, 2025 - 8:00 AM",
-			description: "Package is currently in transit to your location",
-			completed: true,
-			current: true,
-			icon: <MapPin className="h-5 w-5" />,
-		},
-		{
-			status: "Out for Delivery",
-			date: "Expected: November 5, 2025",
-			description: "Package will be out for delivery",
-			completed: false,
-			icon: <Truck className="h-5 w-5" />,
-		},
-		{
-			status: "Delivered",
-			date: "Expected: November 5, 2025",
-			description: "Package will be delivered to your address",
-			completed: false,
-			icon: <CheckCircle className="h-5 w-5" />,
-		},
-	],
-};
-
 export function TrackOrder() {
 	const [orderNumber, setOrderNumber] = useState("");
 	const [email, setEmail] = useState("");
@@ -98,15 +39,31 @@ export function TrackOrder() {
 		e.preventDefault();
 		setIsLoading(true);
 
-		// Simulate API call
-		setTimeout(() => {
-			if (orderNumber.toLowerCase().includes("lux") || orderNumber === "001234") {
-				setOrderData(mockOrderData);
+		if (!orderNumber) {
+			setOrderData(null);
+			setIsLoading(false);
+			return;
+		}
+
+		try {
+			const response = await fetch("/api/track-order", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ orderNumber }),
+			});
+
+			if (response.ok) {
+				const data = (await response.json()) as { order: OrderData };
+				setOrderData(data.order);
 			} else {
 				setOrderData(null);
 			}
+		} catch (error) {
+			console.error("Error tracking order:", error);
+			setOrderData(null);
+		} finally {
 			setIsLoading(false);
-		}, 1500);
+		}
 	};
 
 	return (

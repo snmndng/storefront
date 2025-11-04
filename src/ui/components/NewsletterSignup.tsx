@@ -1,5 +1,8 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
-import { Mail, Gift, Star, Zap, Users } from "lucide-react";
+import { Mail, Gift, Star, Zap, Users, CheckCircle, AlertCircle } from "lucide-react";
 import { Button } from "@/ui/components/Button";
 
 const benefits = [
@@ -26,6 +29,95 @@ const benefits = [
 ];
 
 export function NewsletterSignup() {
+	const [formData, setFormData] = useState({
+		email: "",
+		firstName: "",
+		preferences: [] as string[],
+	});
+	const [isLoading, setIsLoading] = useState(false);
+	const [success, setSuccess] = useState(false);
+	const [errors, setErrors] = useState<string[]>([]);
+
+	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const { name, value, type, checked } = e.target;
+
+		if (type === "checkbox" && name === "preferences") {
+			setFormData((prev) => ({
+				...prev,
+				preferences: checked
+					? [...prev.preferences, value]
+					: prev.preferences.filter((pref) => pref !== value),
+			}));
+		} else {
+			setFormData((prev) => ({
+				...prev,
+				[name]: value,
+			}));
+		}
+	};
+
+	const handleSubmit = async (e: React.FormEvent) => {
+		e.preventDefault();
+		setIsLoading(true);
+		setErrors([]);
+
+		if (!formData.email) {
+			setErrors(["Email is required"]);
+			setIsLoading(false);
+			return;
+		}
+
+		try {
+			const response = await fetch("/api/newsletter", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(formData),
+			});
+
+			if (response.ok) {
+				setSuccess(true);
+			} else {
+				if (response.status === 409) {
+					setErrors(["This email is already subscribed to our newsletter"]);
+				} else {
+					try {
+						const errorData = (await response.json()) as { message?: string };
+						setErrors([errorData.message || "Subscription failed. Please try again."]);
+					} catch {
+						setErrors(["Subscription failed. Please try again."]);
+					}
+				}
+			}
+		} catch (error) {
+			setErrors([
+				"Unable to subscribe at the moment.",
+				"Please check your internet connection and try again.",
+			]);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	if (success) {
+		return (
+			<div className="space-y-12">
+				<div className="text-center">
+					<div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-green-500 to-green-600">
+						<CheckCircle className="h-10 w-10 text-white" />
+					</div>
+					<h1 className="mb-4 text-4xl font-bold text-gray-900">Welcome to the Family!</h1>
+					<p className="text-xl text-gray-600">You&apos;ve successfully subscribed to our newsletter</p>
+					<div className="mt-8 rounded-lg bg-green-50 p-6">
+						<p className="text-green-800">
+							Thank you for subscribing! You&apos;ll receive exclusive offers, new arrivals, and luxury
+							lifestyle content directly in your inbox.
+						</p>
+					</div>
+				</div>
+			</div>
+		);
+	}
+
 	return (
 		<div className="space-y-12">
 			{/* Hero Section */}
@@ -50,25 +142,28 @@ export function NewsletterSignup() {
 				))}
 			</div>
 
+			{/* Error Messages */}
+			{errors.length > 0 && (
+				<div className="mx-auto max-w-2xl">
+					<div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4">
+						<div className="flex items-start">
+							<AlertCircle className="mr-3 mt-0.5 h-5 w-5 flex-shrink-0 text-red-500" />
+							<div>
+								{errors.map((error, index) => (
+									<p key={index} className="text-sm text-red-700">
+										{error}
+									</p>
+								))}
+							</div>
+						</div>
+					</div>
+				</div>
+			)}
+
 			{/* Signup Form */}
 			<div className="mx-auto max-w-2xl">
 				<div className="rounded-lg border border-gray-200 bg-white p-8 shadow-sm">
-					<form
-						action={async (formData) => {
-							"use server";
-
-							const email = formData.get("email")?.toString();
-							const firstName = formData.get("firstName")?.toString();
-							const preferences = formData.getAll("preferences");
-
-							if (!email) {
-								throw new Error("Email is required");
-							}
-
-							// TODO: Implement newsletter signup logic
-							console.log("Newsletter signup:", { email, firstName, preferences });
-						}}
-					>
+					<form onSubmit={handleSubmit}>
 						<div className="mb-6 grid gap-4 md:grid-cols-2">
 							<div>
 								<label htmlFor="firstName" className="mb-2 block text-sm font-medium text-gray-700">
@@ -78,6 +173,8 @@ export function NewsletterSignup() {
 									type="text"
 									name="firstName"
 									id="firstName"
+									value={formData.firstName}
+									onChange={handleInputChange}
 									placeholder="Enter your first name"
 									className="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 text-gray-900 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20"
 								/>
@@ -90,6 +187,8 @@ export function NewsletterSignup() {
 									type="email"
 									name="email"
 									id="email"
+									value={formData.email}
+									onChange={handleInputChange}
 									required
 									placeholder="Enter your email address"
 									className="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 text-gray-900 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20"
@@ -103,8 +202,8 @@ export function NewsletterSignup() {
 							</label>
 							<div className="grid gap-2 sm:grid-cols-2">
 								{[
-									"Women's Fashion",
-									"Men's Fashion",
+									"Women&apos;s Fashion",
+									"Men&apos;s Fashion",
 									"Jewelry & Watches",
 									"Handbags & Accessories",
 									"Home & Lifestyle",
@@ -115,6 +214,8 @@ export function NewsletterSignup() {
 											type="checkbox"
 											name="preferences"
 											value={interest}
+											checked={formData.preferences.includes(interest)}
+											onChange={handleInputChange}
 											className="rounded border-gray-300 text-amber-600 focus:ring-amber-500"
 										/>
 										<span className="text-sm text-gray-700">{interest}</span>
@@ -123,8 +224,16 @@ export function NewsletterSignup() {
 							</div>
 						</div>
 
-						<Button type="submit" variant="primary" size="lg" fullWidth icon={<Mail className="h-5 w-5" />}>
-							Subscribe to Newsletter
+						<Button
+							type="submit"
+							variant="primary"
+							size="lg"
+							fullWidth
+							loading={isLoading}
+							disabled={isLoading}
+							icon={<Mail className="h-5 w-5" />}
+						>
+							{isLoading ? "Subscribing..." : "Subscribe to Newsletter"}
 						</Button>
 
 						<p className="mt-4 text-center text-xs text-gray-500">
