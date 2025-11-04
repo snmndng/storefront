@@ -3,6 +3,7 @@ import { User, Package, MapPin, Settings, LogOut } from "lucide-react";
 import { CurrentUserOrderListDocument, PaymentChargeStatusEnum } from "@/gql/graphql";
 import { executeGraphQL } from "@/lib/graphql";
 import { formatMoney, formatDate } from "@/lib/utils";
+import { logout } from "@/app/actions";
 
 interface AccountDashboardProps {
 	channel: string;
@@ -223,10 +224,12 @@ export async function AccountDashboard({ channel }: AccountDashboardProps) {
 
 			{/* Sign Out */}
 			<div className="border-t border-gray-200 pt-6">
-				<button className="flex items-center space-x-2 text-red-600 hover:text-red-700">
-					<LogOut className="h-5 w-5" />
-					<span>Sign Out</span>
-				</button>
+				<form action={logout}>
+					<button type="submit" className="flex items-center space-x-2 text-red-600 hover:text-red-700">
+						<LogOut className="h-5 w-5" />
+						<span>Sign Out</span>
+					</button>
+				</form>
 			</div>
 		</div>
 	);

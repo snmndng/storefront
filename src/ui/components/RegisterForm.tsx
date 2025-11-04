@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { UserPlus, AlertCircle, CheckCircle, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/ui/components/Button";
 import { LinkWithChannel } from "@/ui/atoms/LinkWithChannel";
+import { register } from "@/app/actions";
 
 export function RegisterForm() {
 	const [formData, setFormData] = useState({
@@ -20,7 +21,7 @@ export function RegisterForm() {
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 	const [errors, setErrors] = useState<string[]>([]);
-	const [isLoading, setIsLoading] = useState(false);
+	const [isPending, startTransition] = useTransition();
 	const [success, setSuccess] = useState(false);
 	const router = useRouter();
 	const { channel } = useParams<{ channel?: string }>();
@@ -35,7 +36,6 @@ export function RegisterForm() {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		setIsLoading(true);
 		setErrors([]);
 
 		// Validation
@@ -59,44 +59,30 @@ export function RegisterForm() {
 
 		if (validationErrors.length > 0) {
 			setErrors(validationErrors);
-			setIsLoading(false);
 			return;
 		}
 
-		try {
-			// Simulate registration API call
-			const response = await fetch("/api/auth/register", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(formData),
-			});
+		startTransition(async () => {
+			try {
+				const currentChannel = (channel as string) || "default-channel";
+				const result = await register({
+					...formData,
+					channel: currentChannel,
+				});
 
-			if (response.ok) {
-				setSuccess(true);
-				setTimeout(() => {
-					const currentChannel = channel || "default-channel";
-					router.push(`/${currentChannel}/login?registered=true`);
-				}, 2000);
-			} else {
-				if (response.status === 409) {
-					setErrors(["An account with this email already exists. Please sign in instead."]);
+				if (result.success) {
+					setSuccess(true);
+					setTimeout(() => {
+						router.push(`/${currentChannel}/login?registered=true`);
+					}, 2000);
 				} else {
-					try {
-						const errorData = (await response.json()) as { message?: string };
-						setErrors([errorData.message || "Registration failed. Please try again."]);
-					} catch {
-						setErrors(["Registration failed. Please try again."]);
-					}
+					setErrors(result.errors || ["Registration failed. Please try again."]);
 				}
+			} catch (error) {
+				console.error("Registration error:", error);
+				setErrors(["An unexpected error occurred. Please try again."]);
 			}
-		} catch (error) {
-			setErrors([
-				"Unable to create account at the moment.",
-				"Please check your internet connection and try again.",
-			]);
-		} finally {
-			setIsLoading(false);
-		}
+		});
 	};
 
 	if (success) {
@@ -301,11 +287,11 @@ export function RegisterForm() {
 					variant="primary"
 					size="lg"
 					fullWidth
-					loading={isLoading}
-					disabled={isLoading}
+					loading={isPending}
+					disabled={isPending}
 					icon={<UserPlus className="h-5 w-5" />}
 				>
-					{isLoading ? "Creating Account..." : "Create Account"}
+					{isPending ? "Creating Account..." : "Create Account"}
 				</Button>
 			</form>
 

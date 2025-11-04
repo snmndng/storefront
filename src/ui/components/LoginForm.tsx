@@ -1,62 +1,43 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useState, useTransition } from "react";
+import { useParams } from "next/navigation";
 import { LogIn, User, AlertCircle, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/ui/components/Button";
 import { LinkWithChannel } from "@/ui/atoms/LinkWithChannel";
+import { login } from "@/app/actions";
 
 export function LoginForm() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
 	const [errors, setErrors] = useState<string[]>([]);
-	const [isLoading, setIsLoading] = useState(false);
-	const router = useRouter();
+	const [isPending, startTransition] = useTransition();
 	const { channel } = useParams<{ channel?: string }>();
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		setIsLoading(true);
 		setErrors([]);
 
 		if (!email || !password) {
 			setErrors(["Email and password are required"]);
-			setIsLoading(false);
 			return;
 		}
 
-		try {
-			// Simulate login API call
-			const response = await fetch("/api/auth/login", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ email, password }),
-			});
+		startTransition(async () => {
+			try {
+				const currentChannel = (channel as string) || "default-channel";
+				const result = await login(email, password, currentChannel);
 
-			if (response.ok) {
-				const currentChannel = channel || "default-channel";
-				router.push(`/${currentChannel}/account`);
-			} else {
-				if (response.status === 404 || response.status === 401) {
-					setErrors([
-						"Account not found or invalid credentials.",
-						"Please check your email and password, or create a new account.",
-					]);
-				} else {
-					try {
-						const errorData = (await response.json()) as { message?: string };
-						setErrors([errorData.message || "Login failed. Please try again."]);
-					} catch {
-						setErrors(["Login failed. Please try again."]);
-					}
+				if (!result.success) {
+					setErrors(result.errors || ["Login failed. Please try again."]);
 				}
+				// If successful, the login action will handle the redirect
+			} catch (error) {
+				console.error("Login error:", error);
+				setErrors(["An unexpected error occurred. Please try again."]);
 			}
-		} catch (error) {
-			setErrors(["Unable to sign in at the moment.", "Please check your internet connection and try again."]);
-		} finally {
-			setIsLoading(false);
-		}
+		});
 	};
 
 	return (
@@ -156,11 +137,11 @@ export function LoginForm() {
 					variant="primary"
 					size="lg"
 					fullWidth
-					loading={isLoading}
-					disabled={isLoading}
+					loading={isPending}
+					disabled={isPending}
 					icon={<LogIn className="h-5 w-5" />}
 				>
-					{isLoading ? "Signing In..." : "Sign In"}
+					{isPending ? "Signing In..." : "Sign In"}
 				</Button>
 			</form>
 
