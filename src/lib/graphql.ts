@@ -48,13 +48,19 @@ export async function executeGraphQL<Result, Variables>(
 				return "";
 			}
 		})();
-		console.error(input.body);
+		console.error("❌ HTTP Error Response:");
+		console.error("Status:", response.status, response.statusText);
+		console.error("Request body:", input.body);
+		console.error("Response body:", body);
 		throw new HTTPError(response, body);
 	}
 
 	const body = (await response.json()) as GraphQLRespone<Result>;
 
 	if ("errors" in body) {
+		console.error("❌ GraphQL Error Response:");
+		console.error("Errors:", JSON.stringify(body.errors, null, 2));
+		console.error("Request:", input.body);
 		throw new GraphQLError(body);
 	}
 

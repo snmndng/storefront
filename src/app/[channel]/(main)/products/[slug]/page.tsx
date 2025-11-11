@@ -112,14 +112,27 @@ export default async function Page(props: {
 			console.log("Product not found for slug:", decodedSlug);
 		}
 	} catch (error) {
-		console.error("Error fetching product:", error);
+		console.error("❌ Error fetching product:", error);
 		console.error("Error details:", {
 			slug: params.slug,
 			decodedSlug: decodeURIComponent(params.slug),
 			channel: params.channel,
-			error: error instanceof Error ? error.message : String(error),
+			errorName: error instanceof Error ? error.constructor.name : typeof error,
+			errorMessage: error instanceof Error ? error.message : String(error),
+			errorStack: error instanceof Error ? error.stack : undefined,
 		});
-		// Return not found instead of throwing to avoid 500 error
+
+		// Check if it's a server/network error vs product not found
+		if (error instanceof Error) {
+			// If it's an HTTP error (500, 502, 503, etc.) or network error, throw it
+			if (error.message.includes("HTTP error") || error.message.includes("fetch")) {
+				console.error("🔴 Server or network error detected - throwing 500");
+				throw error; // This will show as 500 error page
+			}
+		}
+
+		// For other errors (like product not found), show 404
+		console.log("Showing 404 page");
 		notFound();
 	}
 

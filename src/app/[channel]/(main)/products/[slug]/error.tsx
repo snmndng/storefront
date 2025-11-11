@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import { AlertCircle, ArrowLeft, RefreshCw } from "lucide-react";
+import { AlertCircle, Home, RefreshCw } from "lucide-react";
 
 export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
 	useEffect(() => {
@@ -11,48 +11,46 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
 
 	return (
 		<div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-			<div className="w-full max-w-md rounded-lg bg-white p-8 text-center shadow-lg">
-				<div className="mb-6">
-					<AlertCircle className="mx-auto mb-4 h-16 w-16 text-red-500" />
-					<h1 className="mb-2 text-2xl font-bold text-gray-900">Oops! Something went wrong</h1>
-					<p className="text-gray-600">
-						We encountered an error while loading this product. This might be due to:
-					</p>
+			<div className="w-full max-w-md text-center">
+				<div className="mb-6 flex justify-center">
+					<div className="rounded-full bg-red-100 p-4">
+						<AlertCircle className="h-12 w-12 text-red-600" />
+					</div>
 				</div>
 
-				<div className="mb-8 text-left">
-					<ul className="space-y-2 text-sm text-gray-600">
-						<li>• The product might not exist or has been removed</li>
-						<li>• There might be a temporary server issue</li>
-						<li>• Your internet connection might be unstable</li>
-					</ul>
-				</div>
+				<h1 className="mb-2 text-3xl font-bold text-gray-900">Something went wrong</h1>
+				<p className="mb-6 text-gray-600">
+					We encountered an error while loading this product. This could be due to a server issue or
+					connectivity problem.
+				</p>
 
-				<div className="space-y-4">
+				{error.message && (
+					<div className="mb-6 rounded-lg bg-red-50 p-4 text-left">
+						<p className="text-sm font-medium text-red-800">Error details:</p>
+						<p className="mt-1 text-sm text-red-700">{error.message}</p>
+						{error.digest && <p className="mt-1 text-xs text-red-600">Error ID: {error.digest}</p>}
+					</div>
+				)}
+
+				<div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
 					<button
 						onClick={reset}
-						className="flex w-full items-center justify-center rounded-lg bg-amber-600 px-6 py-3 font-medium text-white transition-colors hover:bg-amber-700"
+						className="flex items-center justify-center gap-2 rounded-lg bg-amber-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-amber-700"
 					>
-						<RefreshCw className="mr-2 h-5 w-5" />
+						<RefreshCw className="h-4 w-4" />
 						Try Again
 					</button>
-
 					<Link
-						href="/luxior-main/products"
-						className="flex w-full items-center justify-center rounded-lg bg-gray-100 px-6 py-3 font-medium text-gray-700 transition-colors hover:bg-gray-200"
+						href="/"
+						className="flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-6 py-3 font-semibold text-gray-700 transition-colors hover:bg-gray-50"
 					>
-						<ArrowLeft className="mr-2 h-5 w-5" />
-						Back to Products
+						<Home className="h-4 w-4" />
+						Go Home
 					</Link>
 				</div>
 
-				<div className="mt-8 border-t border-gray-200 pt-6">
-					<p className="text-sm text-gray-500">
-						If the problem persists, please{" "}
-						<Link href="/luxior-main/contact" className="text-amber-600 hover:underline">
-							contact our support team
-						</Link>
-					</p>
+				<div className="mt-8 text-sm text-gray-500">
+					<p>If this problem persists, please contact support.</p>
 				</div>
 			</div>
 		</div>
