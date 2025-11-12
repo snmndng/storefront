@@ -5,6 +5,7 @@ import { ChannelsListDocument } from "@/gql/graphql";
 export const generateStaticParams = async () => {
 	// the `channels` query is protected
 	// you can either hardcode the channels or use an app token to fetch the channel list here
+	const defaultChannel = process.env.NEXT_PUBLIC_CHANNEL || "default-channel";
 
 	try {
 		if (process.env.SALEOR_APP_TOKEN) {
@@ -21,12 +22,12 @@ export const generateStaticParams = async () => {
 					.map((channel) => ({ channel: channel.slug })) ?? []
 			);
 		} else {
-			return [{ channel: "default-channel" }];
+			return [{ channel: defaultChannel }];
 		}
 	} catch (error) {
 		console.warn("Failed to generate static params for channels:", error);
 		// Fallback to default channel
-		return [{ channel: "default-channel" }];
+		return [{ channel: defaultChannel }];
 	}
 };
 

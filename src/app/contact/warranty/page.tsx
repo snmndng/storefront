@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 
 export default function WarrantyRedirect() {
-	redirect("/luxior-main/warranty");
+	const defaultChannel = process.env.NEXT_PUBLIC_CHANNEL || "default-channel";
+	redirect(`/${defaultChannel}/warranty`);
 }

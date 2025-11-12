@@ -10,8 +10,10 @@ import {
 	ProductListSimpleDocument,
 } from "@/gql/graphql";
 
-export async function login(email: string, password: string, channel: string = "default-channel") {
+export async function login(email: string, password: string, channel?: string) {
 	"use server";
+	const defaultChannel = process.env.NEXT_PUBLIC_CHANNEL || "default-channel";
+	const currentChannel = channel || defaultChannel;
 
 	try {
 		// First try with Saleor auth client
@@ -26,16 +28,16 @@ export async function login(email: string, password: string, channel: string = "
 
 			// Try fallback direct GraphQL method
 			console.log("Trying fallback GraphQL login method...");
-			return await fallbackLogin(email, password, channel);
+			return await fallbackLogin(email, password, currentChannel);
 		}
 
 		if (result.data?.tokenCreate?.token) {
 			console.log("Auth client login successful, redirecting to account");
-			redirect(`/${channel}/account`);
+			redirect(`/${currentChannel}/account`);
 		}
 
 		console.log("Auth client login failed - no token received, trying fallback...");
-		return await fallbackLogin(email, password, channel);
+		return await fallbackLogin(email, password, currentChannel);
 	} catch (error) {
 		// Check if this is a Next.js redirect (which is expected)
 		if (error instanceof Error && error.message === "NEXT_REDIRECT") {
@@ -43,11 +45,13 @@ export async function login(email: string, password: string, channel: string = "
 		}
 		console.error("Auth client login error:", error);
 		console.log("Trying fallback GraphQL login method...");
-		return await fallbackLogin(email, password, channel);
+		return await fallbackLogin(email, password, currentChannel);
 	}
 }
 
-async function fallbackLogin(email: string, password: string, channel: string) {
+async function fallbackLogin(email: string, password: string, channel?: string) {
+	const defaultChannel = process.env.NEXT_PUBLIC_CHANNEL || "default-channel";
+	const currentChannel = channel || defaultChannel;
 	try {
 		console.log("Attempting direct GraphQL login for:", email);
 
@@ -73,7 +77,7 @@ async function fallbackLogin(email: string, password: string, channel: string) {
 			// TODO: Set the token in cookies manually since we bypassed the auth client
 			// We might need to manually set the tokens here for proper session management
 
-			redirect(`/${channel}/account`);
+			redirect(`/${currentChannel}/account`);
 		}
 
 		return {
@@ -111,6 +115,8 @@ export async function register(formData: {
 	channel?: string;
 }) {
 	"use server";
+	const defaultChannel = process.env.NEXT_PUBLIC_CHANNEL || "default-channel";
+	const currentChannel = formData.channel || defaultChannel;
 
 	try {
 		const result = await executeGraphQL(AccountRegisterDocument, {
@@ -120,7 +126,7 @@ export async function register(formData: {
 					password: formData.password,
 					firstName: formData.firstName,
 					lastName: formData.lastName,
-					channel: formData.channel || "default-channel",
+					channel: currentChannel,
 				},
 			},
 			withAuth: false,
@@ -148,7 +154,7 @@ export async function register(formData: {
 				if (loginResult.data?.tokenCreate?.token) {
 					console.log("Auto-login successful, redirecting to account");
 					// Auto-login successful, redirect to account page
-					redirect(`/${formData.channel || "default-channel"}/account`);
+					redirect(`/${currentChannel}/account`);
 				} else {
 					console.log("Auto-login failed, user needs to login manually");
 					// Auto-login failed, but registration was successful
@@ -232,6 +238,7 @@ export async function createTestUser() {
 
 	const testEmail = "test@luxiorstore.com";
 	const testPassword = "testpassword123";
+	const defaultChannel = process.env.NEXT_PUBLIC_CHANNEL || "default-channel";
 
 	try {
 		const result = await register({
@@ -239,7 +246,7 @@ export async function createTestUser() {
 			lastName: "User",
 			email: testEmail,
 			password: testPassword,
-			channel: "default-channel",
+			channel: defaultChannel,
 		});
 
 		return {
@@ -258,14 +265,16 @@ export async function createTestUser() {
 }
 
 // Debug function to list available products
-export async function listProducts(channel: string = "default-channel") {
+export async function listProducts(channel?: string) {
 	"use server";
+	const defaultChannel = process.env.NEXT_PUBLIC_CHANNEL || "default-channel";
+	const currentChannel = channel || defaultChannel;
 
 	try {
-		console.log("Fetching products for channel:", channel);
+		console.log("Fetching products for channel:", currentChannel);
 
 		const result = await executeGraphQL(ProductListSimpleDocument, {
-			variables: { first: 10, channel },
+			variables: { first: 10, channel: currentChannel },
 			withAuth: false,
 		});
 

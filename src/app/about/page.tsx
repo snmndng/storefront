@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 
 export default function AboutRedirect() {
-	redirect("/luxior-main/about");
+	const defaultChannel = process.env.NEXT_PUBLIC_CHANNEL || "default-channel";
+	redirect(`/${defaultChannel}/about`);
 }

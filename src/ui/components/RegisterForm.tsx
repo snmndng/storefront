@@ -64,7 +64,8 @@ export function RegisterForm() {
 
 		startTransition(async () => {
 			try {
-				const currentChannel = (channel as string) || "default-channel";
+				const defaultChannel = process.env.NEXT_PUBLIC_CHANNEL || "default-channel";
+				const currentChannel = (channel as string) || defaultChannel;
 				const result = await register({
 					...formData,
 					channel: currentChannel,

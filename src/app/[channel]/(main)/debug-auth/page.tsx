@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useParams } from "next/navigation";
 import { testAuth, createTestUser, login, listProducts } from "@/app/actions";
 
 interface DebugResult {
@@ -17,6 +18,9 @@ interface DebugResult {
 export default function DebugAuthPage() {
 	const [results, setResults] = useState<DebugResult | null>(null);
 	const [loading, setLoading] = useState(false);
+	const { channel } = useParams<{ channel?: string }>();
+	const defaultChannel = process.env.NEXT_PUBLIC_CHANNEL || "default-channel";
+	const currentChannel = (channel as string) || defaultChannel;
 
 	const handleTestAuth = async () => {
 		setLoading(true);
@@ -43,7 +47,7 @@ export default function DebugAuthPage() {
 	const handleTestLogin = async () => {
 		setLoading(true);
 		try {
-			const result = await login("test@luxiorstore.com", "testpassword123", "default-channel");
+			const result = await login("test@luxiorstore.com", "testpassword123", currentChannel);
 			setResults({ type: "test-login", success: result.success, errors: result.errors });
 		} catch (error) {
 			setResults({ type: "test-login", success: false, error: String(error) });
@@ -54,7 +58,7 @@ export default function DebugAuthPage() {
 	const handleListProducts = async () => {
 		setLoading(true);
 		try {
-			const result = await listProducts("luxior-main");
+			const result = await listProducts(currentChannel);
 			setResults({ type: "list-products", ...result });
 		} catch (error) {
 			setResults({ type: "list-products", success: false, error: String(error) });

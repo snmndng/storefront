@@ -26,7 +26,8 @@ export function LoginForm() {
 
 		startTransition(async () => {
 			try {
-				const currentChannel = (channel as string) || "default-channel";
+				const defaultChannel = process.env.NEXT_PUBLIC_CHANNEL || "default-channel";
+				const currentChannel = (channel as string) || defaultChannel;
 				const result = await login(email, password, currentChannel);
 
 				if (!result.success) {
