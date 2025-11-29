@@ -11,7 +11,9 @@ const config = {
                 typedRoutes: false,
         },
         // Allow all hosts for Replit proxy compatibility
-        allowedDevOrigins: ["*"],
+        allowedDevOrigins: process.env.REPLIT_DEV_DOMAIN 
+                ? [process.env.REPLIT_DEV_DOMAIN, "127.0.0.1", "localhost"]
+                : undefined,
         async headers() {
                 return [
                         {
