@@ -11,3 +11,35 @@ channel = "stable-25_05"
 NEXT_PUBLIC_SALEOR_API_URL = "https://storefront1.saleor.cloud/graphql/"
 NEXT_PUBLIC_STOREFRONT_URL = "http://localhost:3000"
 NEXT_PUBLIC_DEFAULT_CHANNEL = "default-channel"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Next.js Dev Server"
+
+[[workflows.workflow]]
+name = "Next.js Dev Server"
+author = "agent"
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pnpm dev -H 0.0.0.0 -p 5000"
+waitForPort = 5000
+
+[[ports]]
+localPort = 5000
+externalPort = 80
+
+[[ports]]
+localPort = 35759
+externalPort = 3000

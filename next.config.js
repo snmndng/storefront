@@ -11,6 +11,7 @@ const config = {
                 typedRoutes: false,
         },
         // Allow all hosts for Replit proxy compatibility
+        allowedDevOrigins: ["*"],
         async headers() {
                 return [
                         {
