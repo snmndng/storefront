@@ -1,0 +1,100 @@
+fragment AddressFragment on Address {
+	id
+	firstName
+	lastName
+	streetAddress1
+	streetAddress2
+	city
+	cityArea
+	postalCode
+	country {
+		code
+		country
+	}
+	countryArea
+	phone
+	isDefaultBillingAddress
+	isDefaultShippingAddress
+}
+
+query UserAddresses {
+	me {
+		id
+		addresses {
+			...AddressFragment
+		}
+		defaultBillingAddress {
+			...AddressFragment
+		}
+		defaultShippingAddress {
+			...AddressFragment
+		}
+	}
+}
+
+mutation AddressCreate($input: AddressInput!, $type: AddressTypeEnum) {
+	accountAddressCreate(input: $input, type: $type) {
+		errors {
+			message
+			field
+			code
+		}
+		address {
+			...AddressFragment
+		}
+		user {
+			id
+			addresses {
+				...AddressFragment
+			}
+		}
+	}
+}
+
+mutation AddressUpdate($id: ID!, $input: AddressInput!) {
+	accountAddressUpdate(id: $id, input: $input) {
+		errors {
+			message
+			field
+			code
+		}
+		address {
+			...AddressFragment
+		}
+	}
+}
+
+mutation AddressDelete($id: ID!) {
+	accountAddressDelete(id: $id) {
+		errors {
+			message
+			field
+			code
+		}
+		user {
+			id
+			addresses {
+				...AddressFragment
+			}
+		}
+	}
+}
+
+mutation SetDefaultAddress($id: ID!, $type: AddressTypeEnum!) {
+	accountSetDefaultAddress(id: $id, type: $type) {
+		errors {
+			message
+			field
+			code
+		}
+		user {
+			id
+			defaultBillingAddress {
+				...AddressFragment
+			}
+			defaultShippingAddress {
+				...AddressFragment
+			}
+		}
+	}
+}

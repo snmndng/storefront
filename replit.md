@@ -25,10 +25,39 @@ This is a Saleor Next.js e-commerce storefront application imported from GitHub.
 - Configured deployment settings for autoscale deployment
 - Created workflow for Next.js dev server
 
+### Custom Authentication & Account Features
+Added comprehensive user authentication and account management:
+
+**New Pages:**
+- `/login` - Enhanced login page with client-side validation and error handling
+- `/register` - User registration with password strength validation
+- `/forgot-password` - Password reset request page
+- `/reset-password` - Password reset confirmation page
+- `/confirm-account` - Email verification page
+- `/profile` - User profile management with editable info
+- `/orders` - Order history with loading skeletons
+- `/addresses` - Saved addresses management
+- `/contact` - Contact form page
+
+**Authentication Features:**
+- JWT-based authentication via Saleor Auth SDK
+- Client-side form validation (email format, password strength)
+- Server action-based form handling
+- Graceful API error display
+- Loading states and success feedback
+- Password reset flow
+
+**New Components:**
+- Reusable form components (FormInput, SubmitButton, FormError, FormSuccess)
+- Auth form components (LoginFormClient, RegisterFormClient, etc.)
+- Account components (ProfileForm, LogoutButton)
+- Contact form with validation
+
 ### Configuration Changes
 - **next.config.js**: Added `allowedDevOrigins` to support Replit's proxy setup
 - **Workflow**: Configured to run on port 5000 with proper hostname binding
 - **Environment Variables**: Set up NEXT_PUBLIC_SALEOR_API_URL and related config
+- **UserMenu**: Added links to Profile and Orders pages
 
 ## Project Architecture
 

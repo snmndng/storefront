@@ -1,0 +1,20 @@
+fragment AccountErrorFragment on AccountError {
+	message
+	field
+	code
+}
+
+mutation AccountRegister($input: AccountRegisterInput!) {
+	accountRegister(input: $input) {
+		errors {
+			...AccountErrorFragment
+		}
+		requiresConfirmation
+		user {
+			id
+			email
+			firstName
+			lastName
+		}
+	}
+}

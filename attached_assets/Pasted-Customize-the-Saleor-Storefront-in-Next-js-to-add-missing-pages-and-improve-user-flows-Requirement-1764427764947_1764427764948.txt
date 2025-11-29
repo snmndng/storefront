@@ -1,0 +1,44 @@
+Customize the Saleor Storefront in Next.js to add missing pages and improve user flows.
+
+Requirements:
+1. Pages:
+   - Add Registration, Login, About Us, Contact, FAQ, Profile, and Order History pages.
+   - All content (links, text, user data) must be fetched dynamically from the Saleor GraphQL API.
+   - No hardcoded values for users, products, navigation, or settings.
+
+2. Registration & Authentication:
+   - Integrate with Saleor GraphQL mutations for account creation, login, logout, password reset, and email verification.
+   - Add form validation (email format, password strength, confirm password).
+   - Display API error messages gracefully (e.g., duplicate email, invalid credentials).
+   - Use JWT tokens for authentication and session management.
+
+3. Navigation & Content:
+   - Header and footer links must be generated dynamically from API-driven configuration.
+   - About Us and FAQ content should be pulled from Saleor CMS or API, not static text.
+
+4. Styling & UX:
+   - Use TailwindCSS for consistent styling with the existing storefront theme.
+   - Ensure responsiveness across devices.
+   - Add loading skeletons and error states for API calls.
+
+5. Internationalization:
+   - Support multi-language and currency switching via Saleor’s API.
+   - No hardcoded translations or currency values.
+
+6. Performance & SEO:
+   - Use Next.js dynamic routing with ISR (Incremental Static Regeneration).
+   - Add SEO-friendly metadata and Open Graph tags dynamically from API.
+
+7. Deployment & Testing:
+   - Ensure smooth deployment on Vercel with no static param errors.
+   - Pages must build dynamically without hardcoded static paths.
+   - Add unit tests for forms and API calls.
+   - Ensure CI/CD readiness and error monitoring (e.g., Sentry).
+
+8. Git Workflow:
+   - The `main` branch must track the upstream Saleor repository (`upstream/main`).
+   - Create a `master` branch that serves as the production branch.
+   - All new features and fixes should be developed in separate feature branches and merged into `master` via pull requests.
+   - Keep `main` updated by regularly fetching and rebasing from `upstream/main`.
+   - Ensure compatibility when pulling updates from upstream.
+   - Maintain clean commit history with meaningful commit messages.
